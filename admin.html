@@ -1,0 +1,131 @@
+<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lovely Enterprises Admin</title><link rel="stylesheet" href="style.css">
+<style>
+.admin-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0;position:sticky;top:0;background:#fff;padding:10px 0;z-index:5;border-bottom:1px solid var(--line)}
+.admin-tab-btn{background:var(--ice);border:1px solid var(--line);border-radius:20px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer}
+.admin-tab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.admin-panel-section{display:none}
+.admin-panel-section.active{display:block}
+</style>
+</head><body><main><section><div class="wrap">
+<h2>🔐 Lovely Enterprises Admin</h2><form id="login"><label>Username<input id="email" type="text" required></label>
+<label>Password<input id="password" type="password" required></label><button class="btn">Login</button><div id="loginResult"></div></form>
+<div id="dashboard" style="display:none">
+
+<div class="admin-tabs">
+  <button type="button" class="admin-tab-btn active" data-tab="tab-dashboard">📊 Dashboard</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-complaints">📝 Complaints</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-catalogue">📋 Rate List</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-secondhand">♻️ Second Hand</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-technicians">🧑‍🔧 Technicians</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-bookings">📅 Bookings</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-amc">🔧 AMC Plans</button>
+  <button type="button" class="admin-tab-btn" data-tab="tab-inventory">🧰 Inventory</button>
+</div>
+
+<div id="tab-dashboard" class="admin-panel-section active">
+<h2>📊 Dashboard</h2>
+<div id="dashboardStats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px">
+  <div style="background:#eef6ff;border-radius:10px;padding:14px"><div style="font-size:22px;font-weight:700" id="statToday">-</div><div style="font-size:13px;color:#4d5f7a">Aaj ki Complaints</div></div>
+  <div style="background:#eef6ff;border-radius:10px;padding:14px"><div style="font-size:22px;font-weight:700" id="statMonth">-</div><div style="font-size:13px;color:#4d5f7a">Is Mahine ki Complaints</div></div>
+  <div style="background:#fff3e0;border-radius:10px;padding:14px"><div style="font-size:22px;font-weight:700" id="statPending">-</div><div style="font-size:13px;color:#4d5f7a">Pending/In Progress</div></div>
+  <div style="background:#e8f5e9;border-radius:10px;padding:14px"><div style="font-size:22px;font-weight:700" id="statCompleted">-</div><div style="font-size:13px;color:#4d5f7a">Completed</div></div>
+  <div style="background:#f3e5f5;border-radius:10px;padding:14px"><div style="font-size:22px;font-weight:700" id="statEarning">-</div><div style="font-size:13px;color:#4d5f7a">Is Mahine ki Kamai (₹)</div></div>
+  <div style="background:#e0f7fa;border-radius:10px;padding:14px"><div style="font-size:16px;font-weight:700" id="statTopService">-</div><div style="font-size:13px;color:#4d5f7a">Sabse zyada Service</div></div>
+</div>
+</div>
+
+<div id="tab-complaints" class="admin-panel-section">
+<h2>Complaints</h2><button class="btn" id="refresh">Refresh</button><div id="list"></div>
+</div>
+
+<div id="tab-catalogue" class="admin-panel-section">
+<h2>📋 Rate List / Catalogue</h2>
+<form id="catForm" style="margin-bottom:20px">
+  <label>Category
+    <select id="catCategory">
+      <option value="CCTV">CCTV Camera</option>
+      <option value="Appliance">AC / Fridge / Washing Machine</option>
+      <option value="Electrical">Bijli Fitting / Saaman</option>
+      <option value="Other">Other Electronic</option>
+    </select>
+  </label>
+  <label>Item/Service Naam<input id="catName" required placeholder="Jaise: CCTV Camera Installation"></label>
+  <label>Price<input id="catPrice" required placeholder="Jaise: ₹500 se shuru"></label>
+  <label>Photo (optional)<input id="catPhoto" type="file" accept="image/*"></label>
+  <button class="btn" type="submit">Add Karein</button>
+  <div id="catResult"></div>
+</form>
+<div id="catList"></div>
+</div>
+
+<div id="tab-secondhand" class="admin-panel-section">
+<h2>♻️ Second Hand Saaman (Bechne ke liye)</h2>
+<form id="shForm" style="margin-bottom:20px">
+  <label>Item Type
+    <select id="shCategory">
+      <option value="AC">AC</option>
+      <option value="Fridge">Refrigerator/Fridge</option>
+      <option value="Washing Machine">Washing Machine</option>
+      <option value="Other">Other</option>
+    </select>
+  </label>
+  <label>Naam/Model<input id="shName" required placeholder="Jaise: Voltas 1.5 Ton Split AC / Fridge"></label>
+  <label>Condition<input id="shCondition" placeholder="Jaise: 2 saal purana, achi condition"></label>
+  <label>Price<input id="shPrice" required placeholder="Jaise: ₹8000"></label>
+  <label>Description (optional)<textarea id="shDescription"></textarea></label>
+  <label>Photo<input id="shPhoto" type="file" accept="image/*"></label>
+  <button class="btn" type="submit">Item Add Karein</button>
+  <div id="shResult"></div>
+</form>
+<div id="shList"></div>
+</div>
+
+<div id="tab-technicians" class="admin-panel-section">
+<h2>🧑‍🔧 Technicians (Location Tracking)</h2>
+<form id="techForm" style="margin-bottom:20px">
+  <label>Naam<input id="techName" required placeholder="Technician ka naam"></label>
+  <label>Mobile<input id="techPhone" required placeholder="Mobile number"></label>
+  <label>Area<input id="techArea" placeholder="Jaise: Najibabad"></label>
+  <button class="btn" type="submit">Technician Add Karein</button>
+  <div id="techResult"></div>
+</form>
+<div id="techList"></div>
+</div>
+
+<div id="tab-bookings" class="admin-panel-section">
+<h2>📅 Bookings</h2>
+<div id="bookingsList"></div>
+</div>
+
+<div id="tab-amc" class="admin-panel-section">
+<h2>🔧 AMC / Annual Service Plans</h2>
+<form id="amcForm" style="margin-bottom:20px">
+  <label>Customer Naam<input id="amcName" required></label>
+  <label>Mobile<input id="amcPhone" required></label>
+  <label>Address<textarea id="amcAddress"></textarea></label>
+  <label>Appliance (jaise: AC, Fridge)<input id="amcAppliance" required></label>
+  <label>Plan kitne mahine ka<select id="amcDuration"><option value="3">3 mahine</option><option value="6">6 mahine</option><option value="12" selected>12 mahine</option></select></label>
+  <label>Service kitne-kitne mahine mein<select id="amcInterval"><option value="1">Har mahine</option><option value="3" selected>Har 3 mahine</option><option value="6">Har 6 mahine</option></select></label>
+  <label>Start Date<input id="amcStart" type="date" required></label>
+  <button class="btn" type="submit">AMC Plan Add Karein</button>
+  <div id="amcResult"></div>
+</form>
+<div id="amcList"></div>
+</div>
+
+<div id="tab-inventory" class="admin-panel-section">
+<h2>🧰 Spare Parts Inventory</h2>
+<form id="invForm" style="margin-bottom:20px">
+  <label>Part ka naam<input id="invName" required></label>
+  <label>Quantity<input id="invQty" type="number" required value="1"></label>
+  <label>Low stock alert (kitna bachne par warning de)<input id="invAlert" type="number" value="3"></label>
+  <label>Price per piece (₹)<input id="invPrice" type="number" value="0"></label>
+  <button class="btn" type="submit">Part Add Karein</button>
+  <div id="invResult"></div>
+</form>
+<div id="invList"></div>
+</div>
+
+</div>
+</div></section></main><script type="module" src="admin.js"></script></body></html>
